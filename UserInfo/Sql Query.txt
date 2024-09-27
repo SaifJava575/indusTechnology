@@ -1,0 +1,105 @@
+===================1. User Table Sql Syntax========================
+-- Table: mockito.users
+
+-- DROP TABLE IF EXISTS mockito.users;
+
+CREATE TABLE IF NOT EXISTS mockito.users
+(
+    id integer NOT NULL DEFAULT nextval('mockito.users_id_seq'::regclass),
+    username character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(120) COLLATE pg_catalog."default" NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by integer,
+    updated_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_by integer,
+    active_flag boolean,
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT users_email_key UNIQUE (email)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS mockito.users
+    OWNER to postgres;
+-- Index: users_id_binary_index
+
+-- DROP INDEX IF EXISTS mockito.users_id_binary_index;
+
+CREATE INDEX IF NOT EXISTS users_id_binary_index
+    ON mockito.users USING btree
+    (id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+
+
+===========================2. User_Roles Sql Table Syntax===============================
+-- Table: mockito.user_roles
+
+-- DROP TABLE IF EXISTS mockito.user_roles;
+
+CREATE TABLE IF NOT EXISTS mockito.user_roles
+(
+    user_id bigint NOT NULL,
+    role_id bigint NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by integer,
+    updated_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_by integer,
+    active_flag boolean,
+    CONSTRAINT user_roles_pkey PRIMARY KEY (user_id, role_id),
+    CONSTRAINT user_roles_role_id_fkey FOREIGN KEY (role_id)
+        REFERENCES mockito.roles (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES mockito.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS mockito.user_roles
+    OWNER to postgres;
+-- Index: role_id_binary_index
+
+-- DROP INDEX IF EXISTS mockito.role_id_binary_index;
+
+CREATE INDEX IF NOT EXISTS role_id_binary_index
+    ON mockito.user_roles USING btree
+    (role_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: user_id_binary_index
+
+-- DROP INDEX IF EXISTS mockito.user_id_binary_index;
+
+CREATE INDEX IF NOT EXISTS user_id_binary_index
+    ON mockito.user_roles USING btree
+    (user_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+=======================3. Role Table Sql Syntax==========================
+-- Table: mockito.roles
+
+-- DROP TABLE IF EXISTS mockito.roles;
+
+CREATE TABLE IF NOT EXISTS mockito.roles
+(
+    id integer NOT NULL DEFAULT nextval('mockito.roles_id_seq'::regclass),
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    created_on timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by integer,
+    updated_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_by integer,
+    active_flag boolean,
+    CONSTRAINT roles_pkey PRIMARY KEY (id),
+    CONSTRAINT roles_name_key UNIQUE (name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS mockito.roles
+    OWNER to postgres;

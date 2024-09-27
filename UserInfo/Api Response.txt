@@ -1,0 +1,127 @@
+1. Sign Up Api 
+==================
+curl --location 'localhost:5200/api/auth/signup' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=1095054E8C8262E6EE609877810F026A' \
+--data-raw '{
+  "username": "rehena",
+  "email": "rehena@gmail.com",
+  "role": ["mod"],
+  "password": "rehena@123"
+}
+'
+
+Response Body:
+===================
+{
+    "message": "User registered successfully!"
+}
+
+
+2. Sign in Api :
+=================
+curl --location 'localhost:5200/api/auth/signin' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=1095054E8C8262E6EE609877810F026A' \
+--data-raw '{
+  "username": "saifuddin",
+  "password": "saif@123"
+}
+'
+
+Response Body:
+=================
+{
+    "id": 2,
+    "username": "saifuddin",
+    "email": "sksaifuddin575@gmail.com",
+    "roles": [
+        "ROLE_ADMIN"
+    ],
+    "accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWlmdWRkaW4iLCJpYXQiOjE3Mjc0NDQzMDEsImV4cCI6MTcyNzUzMDcwMX0._1ttW0v9tp55SmukEOXmgMQYHGD0V2pCleEJ-wqIl-tJsqtYzvksfkHwrt3YfwKS9eH0uqm5TXSwf8-rosd5tg",
+    "tokenType": "Bearer"
+}
+
+3. Search Api (Authorization for User and Admin)
+============
+curl --location 'localhost:5200/api/user/searchUserInfo/1' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWlmdWRkaW4iLCJpYXQiOjE3Mjc0NDExNTIsImV4cCI6MTcyNzUyNzU1Mn0.RCIW6wx42f_6JBBr0N5BANNUB7JtjTrduRXN1LY_0AWi3ZqxE6g0qXhgKqzGlAAbtRdOH5H1KzfwZRElCzognw' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=1095054E8C8262E6EE609877810F026A' \
+--data '{
+    "id": 0,
+    "useName": "",
+    "email": "",
+    "status": null
+}
+'
+
+Response with pagination :
+=============================
+{
+    "currentPageNo": 1,
+    "totalPages": 1,
+    "pageLimit": 10,
+    "totalRecords": 3,
+    "paginationListRecords": [
+        {
+            "roleName": "ROLE_USER",
+            "userName": "masud",
+            "userId": 3,
+            "email": "masud@gmail.com",
+            "status": null
+        },
+        {
+            "roleName": "ROLE_MODERATOR",
+            "userName": "rehena",
+            "userId": 4,
+            "email": "rehena@gmail.com",
+            "status": null
+        },
+        {
+            "roleName": "ROLE_ADMIN",
+            "userName": "saifuddin",
+            "userId": 2,
+            "email": "sksaifuddin575@gmail.com",
+            "status": true
+        }
+    ]
+}
+
+
+
+4. Role Add (Authorization for Admin)
+=========================================
+curl --location 'localhost:5200/api/user/addRole' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYWlmdWRkaW4iLCJpYXQiOjE3Mjc0NDExNTIsImV4cCI6MTcyNzUyNzU1Mn0.RCIW6wx42f_6JBBr0N5BANNUB7JtjTrduRXN1LY_0AWi3ZqxE6g0qXhgKqzGlAAbtRdOH5H1KzfwZRElCzognw' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=1095054E8C8262E6EE609877810F026A' \
+--data '{
+    "name":"ROLE_CEO"
+}
+'
+
+Response Body:
+===========================
+{
+    "status": "200",
+    "message": "Role created sucessfully",
+    "timestamp": "2024-09-27T13:09:42.792+00:00"
+}
+
+
+5. Role Deleted( Authorization For Modarator)
+==========================================
+curl --location --request DELETE 'localhost:5200/api/user/role/5' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZWhlbmEiLCJpYXQiOjE3Mjc0NDM4NTYsImV4cCI6MTcyNzUzMDI1Nn0.4iDwGNEuBz6PxgqCjAIVigoHlTNdL0_MTsHf9R24P-iXfXmZ1bgzSFtrQN0mH035IqzjdJNU5FewckK5NMzcmA' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=1095054E8C8262E6EE609877810F026A' \
+'
+
+Response Body:
+=================
+{
+    "status": "200",
+    "message": "deleteSucessFully",
+    "timestamp": "2024-09-27T13:33:42.112+00:00"
+}
